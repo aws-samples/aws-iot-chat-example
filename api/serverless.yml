@@ -1,0 +1,323 @@
+service: iot-chat-api
+
+plugins:
+  - serverless-webpack
+  - serverless-hooks-plugin
+
+custom:
+  webpackIncludeModules: true # enable auto-packing of external modules
+  variables: ${file(./config.yml)}
+  hooks:
+    after:aws:deploy:finalize:cleanup:
+      - ./scripts/attachConfirmUserTrigger.sh
+      - ./../client/scripts/setup.sh
+    before:remove:remove:
+      - ./scripts/detach_policies.sh
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: prod
+  region: ${opt:region, self:custom.variables.region}
+
+  # Defines permission policy for the Lambda functions.
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: { "Fn::Join" : ["",["arn:aws:dynamodb:",{"Ref":"AWS::Region"},":*:*"]] }
+    - Effect: Allow
+      Action:
+        - iot:AttachPrincipalPolicy
+        - iot:DetachPrincipalPolicy
+        - iot:CreatePolicy
+      Resource:
+        - "*"
+
+functions:
+  CreateUser:
+    handler: src/user/create.main
+    events:
+      - http:
+          path: users
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  GetMe:
+    handler: src/user/getMe.main
+    events:
+      - http:
+          path: users/me
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  GetUser:
+    handler: src/user/get.main
+    events:
+      - http:
+          path: users/{identityId}
+          method: get
+          cors: true
+          authorizer: aws_iam
+          request:
+            parameters:
+              paths:
+                identityId: true
+
+  ListUsers:
+    handler: src/user/list.main
+    events:
+      - http:
+          path: users
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  AttachConnectPolicy:
+    handler: src/policy/attachConnect.main
+    events:
+      - http:
+          path: policy/attach_connect
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  AttachPublicPublishPolicy:
+    handler: src/policy/attachPublicPublish.main
+    events:
+      - http:
+          path: policy/attach_public_publish
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  AttachPublicSubscribePolicy:
+    handler: src/policy/attachPublicSubscribe.main
+    events:
+      - http:
+          path: policy/attach_public_subscribe
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  AttachPublicReceivePolicy:
+    handler: src/policy/attachPublicReceive.main
+    events:
+      - http:
+          path: policy/attach_public_receive
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  AutoConfirmUser:
+    handler: src/user/confirm.main
+
+  CreateChat:
+    handler: src/chat/create.main
+    events:
+      - http:
+          path: chats
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  ListChats:
+    handler: src/chat/list.main
+    events:
+      - http:
+          path: chats
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+resources:
+  Resources:
+    UserTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: "IotChatUsers"
+        AttributeDefinitions:
+          - AttributeName: identityId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: identityId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    ChatTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: "IotChatChats"
+        AttributeDefinitions:
+          - AttributeName: name
+            AttributeType: S
+        KeySchema:
+          - AttributeName: name
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    ConnectPolicy:
+      Type: "AWS::IoT::Policy"
+      Properties:
+        PolicyName: IotChatConnectPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+              - "iot:Connect"
+            Resource:
+              - "*"
+
+    PublicSubscribePolicy:
+      Type: "AWS::IoT::Policy"
+      Properties:
+        PolicyName: IotChatPublicSubscribePolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+              - "iot:Subscribe"
+            Resource: { "Fn::Join" : ["",["arn:aws:iot:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":topicfilter/room/public/*"]] }
+
+    PublicReceivePolicy:
+      Type: "AWS::IoT::Policy"
+      Properties:
+        PolicyName: IotChatPublicReceivePolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+              - "iot:Receive"
+            Resource: { "Fn::Join" : ["",["arn:aws:iot:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":topic/room/public/*"]] }
+
+    UserPool:
+      Type: "AWS::Cognito::UserPool"
+      Properties:
+        UserPoolName: iot_chat_api_user_pool
+        AutoVerifiedAttributes:
+          - email
+        MfaConfiguration: OFF
+        Schema:
+          - AttributeDataType: String
+            Name: email
+            Required: true
+
+    ReactAppClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        GenerateSecret: false
+        RefreshTokenValidity: 200
+        UserPoolId:
+          Ref: UserPool
+
+    IdentityPool:
+      Type: "AWS::Cognito::IdentityPool"
+      Properties:
+        IdentityPoolName: iot_chat_api_identity_pool
+        AllowUnauthenticatedIdentities: false
+        CognitoIdentityProviders:
+          - ClientId:
+              Ref: ReactAppClient
+            ProviderName:
+              Fn::GetAtt: UserPool.ProviderName
+        SupportedLoginProviders:
+          graph.facebook.com: ${self:custom.variables.facebook_app_id}
+          accounts.google.com: ${self:custom.variables.google_app_id}
+
+    IdentityPoolAuthRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Federated:
+                  - "cognito-identity.amazonaws.com"
+              Action:
+                - "sts:AssumeRoleWithWebIdentity"
+              Condition:
+                StringEquals:
+                  cognito-identity.amazonaws.com:aud:
+                    Ref: IdentityPool
+                ForAnyValue:StringLike:
+                  cognito-identity.amazonaws.com:amr: authenticated
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/AWSIoTDataAccess
+        Path: "/"
+        Policies:
+          - PolicyName: iot-chat-invoke-api-gateway
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - execute-api:Invoke
+                  Resource: { "Fn::Join" : ["", ["arn:aws:execute-api:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":",{"Ref":"ApiGatewayRestApi"},"/*"]] }
+
+    IdentityPoolRoleAttachment:
+      Type: AWS::Cognito::IdentityPoolRoleAttachment
+      Properties:
+        IdentityPoolId:
+          Ref: IdentityPool
+        Roles:
+          authenticated:
+            Fn::GetAtt:
+              - IdentityPoolAuthRole
+              - Arn
+
+    ConfirmUserInvocationPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName:
+          Fn::GetAtt: AutoConfirmUserLambdaFunction.Arn
+        Principal: cognito-idp.amazonaws.com
+        SourceArn:
+          Fn::GetAtt: UserPool.Arn
+
+  Outputs:
+    UserPoolId:
+      Description: "The ID of the user pool that is created."
+      Value:
+        Ref: UserPool
+
+    ReactAppClientId:
+      Description: "The ID of the user pool react app client id."
+      Value:
+        Ref: ReactAppClient
+
+    IdentityPoolId:
+      Description: "The ID of the identity pool that is created."
+      Value:
+        Ref: IdentityPool
+
+    AutoConfirmUserFnArn:
+      Description: "The ARN of the Auto Confirm User Lambda function"
+      Value:
+        Fn::GetAtt:
+          - AutoConfirmUserLambdaFunction
+          - Arn
+
+    FacebookAppId:
+      Description: "Facebook App Id"
+      Value: ${self:custom.variables.facebook_app_id}
+
+    GoogleAppId:
+      Description: "Google App Id"
+      Value: ${self:custom.variables.google_app_id}

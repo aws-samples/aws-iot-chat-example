@@ -1,0 +1,61 @@
+{
+  "name": "aws_iot_chat_application",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/awslabs/aws-iot-chat-example"
+  },
+  "dependencies": {
+    "amazon-cognito-identity-js": "^1.20.0",
+    "aws-iot-device-sdk": "^2.1.0",
+    "aws-sdk": "^2.117.0",
+    "crypto-js": "^3.1.9-1",
+    "history": "^4.7.2",
+    "loglevel": "^1.6.0",
+    "moment": "^2.19.1",
+    "prop-types": "^15.5.10",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.17",
+    "react-social-login": "^3.2.1",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.75.1",
+    "uuid": "^3.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "aws s3 cp build s3://{see docs/mobile_hub_deployment.md} --recursive",
+    "test": "react-scripts test --env=jsdom --setupFiles ./src/config/test/setupTests.js",
+    "coverage": "npm test -- --coverage",
+    "eject": "react-scripts eject"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js}",
+      "!src/lib/sigV4Client.js",
+      "!src/registerServiceWorker.js",
+      "!src/config/**/*.js"
+    ]
+  },
+  "devDependencies": {
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.1",
+    "eslint": "^4.7.2",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.4.0",
+    "mockdate": "^2.0.2",
+    "react-test-renderer": "^16.0.0",
+    "redux-mock-store": "^1.3.0"
+  }
+}

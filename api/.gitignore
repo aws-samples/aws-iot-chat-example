@@ -1,0 +1,13 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+.webpack
+
+# testing
+/coverage
+
+npm-debug.log*
+.DS_Store

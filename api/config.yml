@@ -1,0 +1,3 @@
+region: us-west-2
+facebook_app_id: "not_configured" # see docs/social_logins.md
+google_app_id: "not_configured" # see docs/social_logins.md
