@@ -1,0 +1,4 @@
+language: node_js
+script:
+  - npm test --prefix client
+  - npm test --prefix api
