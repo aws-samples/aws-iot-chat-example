@@ -29,7 +29,7 @@ describe('list users', () => {
         new Promise((resolve) => {
           expect(action).toEqual('scan');
           expect(params).toEqual({
-            TableName: 'users',
+            TableName: 'IotChatUsers',
           });
           resolve({ Items: [item] });
         })
