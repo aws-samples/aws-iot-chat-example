@@ -61,7 +61,7 @@ This is a React application demonstrating how to use the AWS IoT platform via MQ
 1. Clone the repository
 
 ```
-$ git clone git@github.com:awslabs/aws-iot-chat-example.git
+$ git clone https://github.com/aws-samples/aws-iot-chat-example.git
 ```
 
 2. Deploy the backend
