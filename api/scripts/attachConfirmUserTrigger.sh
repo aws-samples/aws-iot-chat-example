@@ -1,11 +1,11 @@
-##!/bin/bash
+#!/bin/bash
 
 # This script is used until a bug regarding Cognito User Pools in serverless is fixed
 # https://github.com/serverless/serverless/pull/3799
 
 STACK_NAME="iot-chat-api-prod"
 
-function fail(){
+function fail() {
   tput setaf 1; echo "Failure: $*" && tput sgr0
   exit 1
 }
@@ -43,9 +43,9 @@ function check_jq() {
 function check_stack() {
   info "checking if $STACK_NAME exists..."
 
-  summaries=$(aws cloudformation list-stacks | jq --arg STACK_NAME "$STACK_NAME" '.StackSummaries |
+  summaries=$(aws cloudformation list-stacks | jq --arg STACK_NAME "$STACK_NAME" ".StackSummaries |
     .[] | select((.StackName ==
-  $STACK_NAME) and ((.StackStatus == "CREATE_COMPLETE") or (.StackStatus == "UPDATE_COMPLETE")))')
+  \"$STACK_NAME\") and ((.StackStatus == \"CREATE_COMPLETE\") or (.StackStatus == \"UPDATE_COMPLETE\")))")
   if [ -z "$summaries" ]
   then
     fail "The StackStatus of '$STACK_NAME' is not CREATE_COMPLETE or UPDATE_COMPLETE"
