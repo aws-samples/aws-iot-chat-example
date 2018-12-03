@@ -1,10 +1,10 @@
-##!/bin/bash
+#!/bin/bash
 
 # To tear down the stack, we must detach principals from policies. This script will be run as a before:remove hook to prevent the following error
 # An error occurred: PublicSubscribePolicy - The policy cannot be deleted as the policy is attached to one or more principals (name=PublicSubscribePolicy).
 
 
-function fail(){
+function fail() {
   tput setaf 1; echo "Failure: $*" && tput sgr0
   exit 1
 }
