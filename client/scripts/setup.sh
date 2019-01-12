@@ -88,7 +88,7 @@ function generate_config() {
   success "Found Identity Pool Id"
 
   # IoT Endpoint
-  iot_endpoint=$(aws iot describe-endpoint | jq '.endpointAddress')
+  iot_endpoint=$(aws iot describe-endpoint --endpoint-type iot:Data-ATS| jq '.endpointAddress')
   iot_endpoint=${iot_endpoint//\"}
   jq --arg IOT_ENDPOINT $iot_endpoint '. + { AwsIotHost: $IOT_ENDPOINT }' config.json > temp.json \
     && mv temp.json config.json
