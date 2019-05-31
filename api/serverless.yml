@@ -9,13 +9,14 @@ custom:
   variables: ${file(./config.yml)}
   hooks:
     after:aws:deploy:finalize:cleanup:
-      - ./scripts/attachConfirmUserTrigger.sh
-      - ./../client/scripts/setup.sh
+      - ./scripts/attachConfirmUserTrigger.sh ${self:provider.profile}
+      - ./../client/scripts/setup.sh ${self:provider.profile}
     before:remove:remove:
       - ./scripts/detach_policies.sh
 
 provider:
   name: aws
+  profile: default
   runtime: nodejs8.10
   stage: prod
   region: ${opt:region, self:custom.variables.region}
@@ -31,7 +32,11 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: { "Fn::Join" : ["",["arn:aws:dynamodb:",{"Ref":"AWS::Region"},":*:*"]] }
+      Resource:
+        {
+          "Fn::Join":
+            ["", ["arn:aws:dynamodb:", { "Ref": "AWS::Region" }, ":*:*"]],
+        }
     - Effect: Allow
       Action:
         - iot:AttachPrincipalPolicy
@@ -175,11 +180,11 @@ resources:
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
-          - Effect: "Allow"
-            Action:
-              - "iot:Connect"
-            Resource:
-              - "*"
+            - Effect: "Allow"
+              Action:
+                - "iot:Connect"
+              Resource:
+                - "*"
 
     PublicSubscribePolicy:
       Type: "AWS::IoT::Policy"
@@ -188,10 +193,23 @@ resources:
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
-          - Effect: "Allow"
-            Action:
-              - "iot:Subscribe"
-            Resource: { "Fn::Join" : ["",["arn:aws:iot:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":topicfilter/room/public/*"]] }
+            - Effect: "Allow"
+              Action:
+                - "iot:Subscribe"
+              Resource:
+                {
+                  "Fn::Join":
+                    [
+                      "",
+                      [
+                        "arn:aws:iot:",
+                        { "Ref": "AWS::Region" },
+                        ":",
+                        { "Ref": "AWS::AccountId" },
+                        ":topicfilter/room/public/*",
+                      ],
+                    ],
+                }
 
     PublicReceivePolicy:
       Type: "AWS::IoT::Policy"
@@ -200,10 +218,23 @@ resources:
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
-          - Effect: "Allow"
-            Action:
-              - "iot:Receive"
-            Resource: { "Fn::Join" : ["",["arn:aws:iot:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":topic/room/public/*"]] }
+            - Effect: "Allow"
+              Action:
+                - "iot:Receive"
+              Resource:
+                {
+                  "Fn::Join":
+                    [
+                      "",
+                      [
+                        "arn:aws:iot:",
+                        { "Ref": "AWS::Region" },
+                        ":",
+                        { "Ref": "AWS::AccountId" },
+                        ":topic/room/public/*",
+                      ],
+                    ],
+                }
 
     UserPool:
       Type: "AWS::Cognito::UserPool"
@@ -263,12 +294,27 @@ resources:
         Policies:
           - PolicyName: iot-chat-invoke-api-gateway
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
                   Action:
                     - execute-api:Invoke
-                  Resource: { "Fn::Join" : ["", ["arn:aws:execute-api:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":",{"Ref":"ApiGatewayRestApi"},"/*"]] }
+                  Resource:
+                    {
+                      "Fn::Join":
+                        [
+                          "",
+                          [
+                            "arn:aws:execute-api:",
+                            { "Ref": "AWS::Region" },
+                            ":",
+                            { "Ref": "AWS::AccountId" },
+                            ":",
+                            { "Ref": "ApiGatewayRestApi" },
+                            "/*",
+                          ],
+                        ],
+                    }
 
     IdentityPoolRoleAttachment:
       Type: AWS::Cognito::IdentityPoolRoleAttachment
