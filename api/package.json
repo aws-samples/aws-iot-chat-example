@@ -19,10 +19,10 @@
     "eslint": "^4.10.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "jest": "^21.2.1",
+    "jest": "^25.1.0",
     "regenerator-runtime": "^0.11.0",
     "serverless-webpack": "^3.1.2",
-    "webpack": "^3.7.1",
+    "webpack": "^4.41.6",
     "webpack-node-externals": "^1.6.0"
   },
   "jest": {
