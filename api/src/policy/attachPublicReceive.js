@@ -26,12 +26,7 @@ export const main = async (event, context, callback) => {
     await iot.attachPrincipalPolicy(POLICY_NAME, principal);
     callback(null, success({ status: true }));
   } catch (e) {
-    if (e.statusCode === 409) {
-      // Policy already exists for this cognito identity
-      callback(null, success({ status: true }));
-    } else {
       console.log(e);
       callback(null, failure({ status: false, error: e }));
-    }
   }
 };
