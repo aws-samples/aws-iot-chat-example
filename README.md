@@ -152,7 +152,7 @@ This is the main chat page where the real-time messaging is displayed. You will 
 
 ### Backend
 
-To deploy the backend, this project uses the [Serverless Framework](https://serverless.com/framework/) which is backed by [AWS CloudFormation](https://aws.amazon.com/cloudformation/). In the `api/serverless.yml` file, functions, events, resources and services are defined which Serverless uses to deploy the appropriate Lambda functions, API Gateway services and additional CloudFormation resources.
+To deploy the backend, this project uses the [Serverless Framework](https://serverless.com/framework/docs/) which is backed by [AWS CloudFormation](https://aws.amazon.com/cloudformation/). In the `api/serverless.yml` file, functions, events, resources and services are defined which Serverless uses to deploy the appropriate Lambda functions, API Gateway services and additional CloudFormation resources.
 
 #### IoT Topics
 
