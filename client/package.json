@@ -9,11 +9,12 @@
   },
   "dependencies": {
     "amazon-cognito-identity-js": "^1.20.0",
-    "aws-iot-device-sdk": "^2.2.3",
+    "aws-iot-device-sdk": "^2.2.6",
     "aws-sdk": "^2.117.0",
     "crypto-js": "^3.1.9-1",
     "history": "^4.7.2",
     "loglevel": "^1.6.0",
+    "minimist": ">=1.2.3",
     "moment": "^2.24.0",
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
@@ -26,7 +27,7 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.75.1",
+    "semantic-ui-react": "0.77.0",
     "uuid": "^3.1.0"
   },
   "scripts": {
@@ -49,7 +50,6 @@
   "devDependencies": {
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-16": "^1.0.1",
-    "eslint": ">=4.18.2",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
