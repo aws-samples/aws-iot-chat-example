@@ -55,6 +55,7 @@ This is a React application demonstrating how to use the AWS IoT platform via MQ
 
 * Install and configure the [AWS Command Line Interface](https://aws.amazon.com/cli/)
   * Ensure that the aws cli region is the same as what you define in `api/config.yml`
+  * Please configure your `output` format to be `json`. [Instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-usage-output.html)
 * [jq](https://stedolan.github.io/jq/) to process command-line JSON.
 * [npm](https://www.npmjs.com/get-npm) the node package manager
 
