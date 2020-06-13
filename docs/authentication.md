@@ -173,7 +173,7 @@ resources:
 
 These policies allow users to connect to IoT and subscribe/receive from the topic `/room/public/*`.
 
-Unlike these three static policies, the publishing policy is more dynamic. See `api/src/policy/attachPublicPublish.js` to see how it is implemented. Also see [Chat App IoT Topic Explanation](iot_topics.md) for an explanation of the topic space used for this application.
+Unlike these three static policies, the publishing policy is more dynamic. See `api/src/policy/attachPublicPublish.js` to see how it is implemented. Also see [Chat App IoT Topic Explanation](https://github.com/aws-samples/aws-iot-chat-example#iot-topics) for an explanation of the topic space used for this application.
 
 The corresponding Lambda functions take on the form:
 
