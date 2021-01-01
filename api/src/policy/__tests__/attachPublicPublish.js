@@ -38,7 +38,7 @@ describe('attach public publish policy', () => {
 
   describe('when iot calls succeed', () => {
     beforeEach(() => {
-      const expectedPolicyName = 'PublicPublishPolicy.us-west-2-identity-id';
+      const expectedPolicyName = 'IotChatPublicPublishPolicy.us-west-2-identity-id';
       iot.createPolicy = (policyDocument, policyName) => (
         new Promise((resolve) => {
           const expectedPolicyDocument = generatePolicyDocumentTemplate(identityId, accountArn);

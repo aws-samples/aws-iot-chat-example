@@ -61,7 +61,7 @@ describe('create chat', () => {
     new Promise((resolve) => {
       expect(action).toEqual('get');
       expect(params).toEqual({
-        TableName: 'chats',
+        TableName: 'IotChatChats',
         Key: {
           name: roomName,
         },
@@ -74,7 +74,7 @@ describe('create chat', () => {
     new Promise((resolve) => {
       expect(action).toEqual('get');
       expect(params).toEqual({
-        TableName: 'chats',
+        TableName: 'IotChatChats',
         Key: {
           name: roomName,
         },
@@ -87,7 +87,7 @@ describe('create chat', () => {
     new Promise((resolve) => {
       expect(action).toEqual('put');
       expect(params).toEqual({
-        TableName: 'chats',
+        TableName: 'IotChatChats',
         Item: item,
       });
       resolve();
