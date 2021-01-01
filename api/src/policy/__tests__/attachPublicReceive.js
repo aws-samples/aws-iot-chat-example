@@ -56,30 +56,7 @@ describe('attach public receive policy', () => {
     });
   });
 
-  describe('when policy is already attached', () => {
-    beforeEach(() => {
-      iot.attachPrincipalPolicy = () => (
-        new Promise((resolve, reject) => {
-          reject(new CustomError(409));
-        })
-      );
-    });
-
-    it('should return status true if policy is already attached', async () => {
-      await attachPublicReceive(
-        event,
-        context,
-        (error, result) => {
-          expect(error).toBeFalsy();
-          const body = JSON.parse(result.body);
-          expect(body).toEqual({ status: true });
-          expect(result.statusCode).toEqual(200);
-        },
-      );
-    });
-  });
-
-  describe('when attaching policy fails and not a 409', () => {
+  describe('when attaching policy fails', () => {
     beforeEach(() => {
       iot.attachPrincipalPolicy = () => (
         new Promise((resolve, reject) => {

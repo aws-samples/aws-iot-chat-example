@@ -32,7 +32,7 @@ describe('list chats', () => {
         new Promise((resolve) => {
           expect(action).toEqual('scan');
           expect(params).toEqual({
-            TableName: 'chats',
+            TableName: 'IotChatChats',
           });
           resolve({ Items: [item] });
         })

@@ -48,7 +48,7 @@ describe('get user', () => {
     new Promise((resolve) => {
       expect(action).toEqual('get');
       expect(params).toEqual({
-        TableName: 'users',
+        TableName: 'IotChatUsers',
         Key: {
           identityId,
         },
@@ -61,7 +61,7 @@ describe('get user', () => {
     new Promise((resolve) => {
       expect(action).toEqual('get');
       expect(params).toEqual({
-        TableName: 'users',
+        TableName: 'IotChatUsers',
         Key: {
           identityId,
         },

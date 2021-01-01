@@ -26,7 +26,7 @@ export const main = async (event, context, callback) => {
     await iot.attachPrincipalPolicy(POLICY_NAME, principal);
     callback(null, success({ status: true }));
   } catch (e) {
-      console.log(e);
-      callback(null, failure({ status: false, error: e }));
+    console.log(e);
+    callback(null, failure({ status: false, error: e }));
   }
 };
