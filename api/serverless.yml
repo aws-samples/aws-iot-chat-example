@@ -17,7 +17,7 @@ custom:
 provider:
   name: aws
   profile: default
-  runtime: nodejs10.x
+  runtime: nodejs14.x
   stage: prod
   region: ${opt:region, self:custom.variables.region}
 
