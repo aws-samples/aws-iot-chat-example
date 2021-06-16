@@ -13,6 +13,7 @@
     "aws-sdk": "^2.117.0",
     "browserslist": ">=4.16.5",
     "crypto-js": "^3.1.9-1",
+    "glob-parent": ">=5.1.2",
     "history": "^4.7.2",
     "loglevel": "^1.6.0",
     "minimist": ">=1.2.3",
@@ -30,7 +31,8 @@
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "0.77.0",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "ws": ">=5.2.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -61,6 +63,7 @@
     "mockdate": "^2.0.2",
     "node-forge": ">=0.10.0",
     "node-notifier": ">=8.0.1",
+    "normalize-url": ">=4.5.1",
     "object-path": ">=0.11.5",
     "react-dev-utils": ">=11.0.4",
     "react-scripts": "^3.4.0",
