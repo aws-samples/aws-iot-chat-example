@@ -62,7 +62,7 @@
     "immer": ">=9.0.6",
     "is-svg": ">=4.2.2",
     "mockdate": "^2.0.2",
-    "node-forge": ">=0.10.0",
+    "node-forge": ">=1.0.0",
     "node-notifier": ">=8.0.1",
     "normalize-url": ">=4.5.1",
     "nth-check": ">=2.0.1",
