@@ -18,7 +18,7 @@
     "loglevel": "^1.6.0",
     "minimist": ">=1.2.3",
     "moment": "^2.24.0",
-    "node-fetch": ">=2.6.1",
+    "node-fetch": ">=2.6.7",
     "postcss": ">=8.2.10",
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
