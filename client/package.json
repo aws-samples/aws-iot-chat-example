@@ -16,7 +16,7 @@
     "glob-parent": ">=6.0.1",
     "history": "^4.7.2",
     "loglevel": "^1.6.0",
-    "minimist": ">=1.2.3",
+    "minimist": ">=1.2.6",
     "moment": "^2.29.4",
     "node-fetch": ">=2.6.7",
     "postcss": ">=8.2.13",
