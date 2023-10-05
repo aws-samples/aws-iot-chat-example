@@ -19,7 +19,7 @@
     "minimist": ">=1.2.6",
     "moment": "^2.29.4",
     "node-fetch": ">=3.2.10",
-    "postcss": ">=8.2.13",
+    "postcss": ">=8.4.31",
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
     "react-dom": "^16.12.0",
