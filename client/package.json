@@ -32,7 +32,7 @@
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "0.77.0",
     "uuid": "^3.1.0",
-    "ws": ">=5.2.3"
+    "ws": ">=7.5.10"
   },
   "scripts": {
     "start": "react-scripts start",
