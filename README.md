@@ -59,7 +59,7 @@ Please note that this project has only been tested on macOS. Windows users may n
   * Ensure that the aws cli region is the same as what you define in `api/config.yml`
   * Please configure your `output` format to be `json`. [Instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-usage-output.html)
 * [jq](https://stedolan.github.io/jq/) to process command-line JSON.
-* [npm](https://www.npmjs.com/get-npm) the node package manager
+* [npm](https://www.npmjs.com/get-npm) the node package manager (Please choose node version 14.*.* for best compatibility)
 
 1. Clone the repository
 
