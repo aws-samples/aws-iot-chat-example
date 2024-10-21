@@ -47,17 +47,30 @@ export const main = async (event, context, callback) => {
 
   const policyDocument = generatePolicyDocumentTemplate(principal, accountArn);
 
-  try {
-    await iot.createPolicy(JSON.stringify(policyDocument), policyName);
-    await iot.attachPrincipalPolicy(policyName, principal);
-    callback(null, success({ status: true }));
-  } catch (e) {
-    if (e.statusCode === 409) {
-      // Policy already exists for this cognito identity
-      callback(null, success({ status: true }));
-    } else {
-      console.log(e);
-      callback(null, failure({ status: false, error: e }));
-    }
+try {
+  await iot.createPolicy(JSON.stringify(policyDocument), policyName);
+} catch (e) {
+  if (e.statusCode === 409) {
+    // Policy already exists
+    console.log("Policy already exists. Skipping policy creation.");
+  } else {
+    console.log(e);
+    callback(null, failure({ status: false, error: e }));
   }
+}
+
+try {
+  await iot.attachPrincipalPolicy(policyName, principal);
+  console.log(
+    "Successfully attached the policy: " +
+      policyName +
+      " IdentityId: " +
+      principal
+  );
+  callback(null, success({ status: true }));
+} catch (e) {
+  console.log(e);
+  callback(null, failure({ status: false, error: e }));
+}
+  
 };
