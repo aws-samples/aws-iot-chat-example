@@ -11,16 +11,14 @@
   specific language governing permissions and limitations under the License.
 */
 
-import AWS from 'aws-sdk';
+import { IoTClient, AttachPolicyCommand, CreatePolicyCommand } from '@aws-sdk/client-iot';
 
-export const attachPrincipalPolicy = (policyName, principal) => {
-  const iot = new AWS.Iot();
-  const params = { policyName, principal };
-  return iot.attachPrincipalPolicy(params).promise();
+const iotClient = new IoTClient({ region: process.env.AWS_REGION });
+
+export const attachPrincipalPolicy = (policyName, target) => {
+  return iotClient.send(new AttachPolicyCommand({ policyName, target }));
 };
 
 export const createPolicy = (policyDocument, policyName) => {
-  const iot = new AWS.Iot();
-  const params = { policyDocument, policyName };
-  return iot.createPolicy(params).promise();
+  return iotClient.send(new CreatePolicyCommand({ policyDocument, policyName }));
 };

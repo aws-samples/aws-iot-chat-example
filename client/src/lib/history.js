@@ -1,18 +1,19 @@
-/*
-  Copyright 2017-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Navigation helper for use outside React components (e.g., in Redux actions)
+// In React Router v6, programmatic navigation from outside components requires
+// a shared reference that gets set by the router.
 
-  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except
-  in compliance with the License. A copy of the License is located at
+let navigator = null;
 
-      http://aws.amazon.com/apache2.0/
+export const setNavigator = (nav) => { navigator = nav; };
 
-  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
-  specific language governing permissions and limitations under the License.
-*/
+const history = {
+  push: (path) => {
+    if (navigator) {
+      navigator(path);
+    } else {
+      window.location.href = path;
+    }
+  },
+};
 
-// History singleton used by routers
-
-import { createBrowserHistory } from 'history';
-
-export default createBrowserHistory();
+export default history;

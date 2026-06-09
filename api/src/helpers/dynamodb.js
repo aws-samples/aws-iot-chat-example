@@ -11,12 +11,23 @@
   specific language governing permissions and limitations under the License.
 */
 
-import AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand, GetCommand, QueryCommand, ScanCommand, DeleteCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 
-AWS.config.update({ region: process.env.AWS_REGION });
+const client = new DynamoDBClient({ region: process.env.AWS_REGION });
+const docClient = DynamoDBDocumentClient.from(client);
+
+const commandMap = {
+  put: PutCommand,
+  get: GetCommand,
+  query: QueryCommand,
+  scan: ScanCommand,
+  delete: DeleteCommand,
+  update: UpdateCommand,
+};
 
 export const call = (action, params) => {
-  const dynamoDb = new AWS.DynamoDB.DocumentClient();
-
-  return dynamoDb[action](params).promise();
+  const Command = commandMap[action];
+  if (!Command) throw new Error(`Unknown DynamoDB action: ${action}`);
+  return docClient.send(new Command(params));
 };

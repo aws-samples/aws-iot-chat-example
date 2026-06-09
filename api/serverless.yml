@@ -184,7 +184,19 @@ resources:
               Action:
                 - "iot:Connect"
               Resource:
-                - "*"
+                {
+                  "Fn::Join":
+                    [
+                      "",
+                      [
+                        "arn:aws:iot:",
+                        { "Ref": "AWS::Region" },
+                        ":",
+                        { "Ref": "AWS::AccountId" },
+                        ":client/${cognito-identity.amazonaws.com:sub}",
+                      ],
+                    ],
+                }
 
     PublicSubscribePolicy:
       Type: "AWS::IoT::Policy"
