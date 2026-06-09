@@ -11,27 +11,18 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.15.8",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/plugin-proposal-json-strings": "^7.12.1",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-syntax-import-meta": "^7.10.4",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "eslint": "^7.2.0",
+    "@babel/core": "^7.29.0",
+    "@babel/plugin-transform-class-properties": "^7.29.0",
+    "@babel/plugin-transform-runtime": "^7.29.0",
+    "@babel/preset-env": "^7.29.0",
+    "babel-loader": "^9.2.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.8.0",
-    "glob-parent": ">=5.1.2",
+    "eslint-plugin-import": "^2.29.0",
     "jest": "^29.7.0",
-    "minimist": ">=1.2.6",
-    "regenerator-runtime": "^0.11.0",
-    "serverless-webpack": "^5.3.2",
-    "set-value": ">=4.0.1",
-    "ssri": ">=8.0.1",
-    "webpack": "^5.93.0",
-    "webpack-node-externals": "^1.6.0"
+    "serverless-webpack": "^5.14.0",
+    "webpack": "^5.98.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -42,8 +33,9 @@
     ]
   },
   "dependencies": {
-    "aws-sdk": "^2.133.0",
-    "babel-runtime": "^6.26.0",
+    "@aws-sdk/client-dynamodb": "^3.700.0",
+    "@aws-sdk/client-iot": "^3.700.0",
+    "@aws-sdk/lib-dynamodb": "^3.700.0",
     "serverless-hooks-plugin": "^1.1.0"
   }
 }

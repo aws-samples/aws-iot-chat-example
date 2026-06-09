@@ -2,90 +2,34 @@
   "name": "aws_iot_chat_application",
   "version": "0.1.0",
   "private": true,
-  "homepage": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/awslabs/aws-iot-chat-example"
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "amazon-cognito-identity-js": "^1.20.0",
-    "aws-iot-device-sdk": "^2.2.15",
-    "aws-sdk": ">=2.814.0",
-    "browserslist": ">=4.16.5",
+    "@reduxjs/toolkit": "^2.0.0",
+    "amazon-cognito-identity-js": "^6.3.0",
     "crypto-js": "^4.2.0",
-    "glob-parent": ">=6.0.1",
-    "history": "^4.7.2",
-    "loglevel": "^1.6.0",
-    "minimist": ">=1.2.6",
-    "moment": "^2.29.4",
-    "node-fetch": ">=3.2.10",
-    "postcss": ">=8.4.31",
-    "prop-types": "^15.5.10",
-    "react": "^16.0.0",
-    "react-dom": "^16.12.0",
-    "react-redux": "^5.0.6",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-social-login": "3.2.1",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
-    "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "0.77.0",
-    "uuid": "^3.1.0",
-    "ws": ">=7.5.10"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "predeploy": "npm run build",
-    "deploy": "aws s3 cp build s3://{see docs/mobile_hub_deployment.md} --recursive",
-    "test": "react-scripts test --env=jsdom --setupFiles ./src/config/test/setupTests.js",
-    "coverage": "npm test -- --coverage",
-    "eject": "react-scripts eject"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js}",
-      "!src/lib/sigV4Client.js",
-      "!src/registerServiceWorker.js",
-      "!src/config/**/*.js"
-    ]
+    "loglevel": "^1.9.0",
+    "moment": "^2.30.0",
+    "mqtt": "^5.10.0",
+    "prop-types": "^15.8.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.1.0",
+    "react-router": "^6.20.0",
+    "react-router-dom": "^6.20.0",
+    "redux": "^5.0.0",
+    "semantic-ui-css": "^2.5.0",
+    "semantic-ui-react": "^2.1.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "ansi-regex": ">=5.0.1",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.1",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.4.0",
-    "immer": ">=9.0.6",
-    "is-svg": ">=5.0.0",
-    "mockdate": "^2.0.2",
-    "node-forge": ">=1.3.0",
-    "node-notifier": ">=8.0.1",
-    "normalize-url": ">=4.5.1",
-    "nth-check": ">=2.0.1",
-    "object-path": ">=0.11.8",
-    "react-dev-utils": ">=12.0.1",
-    "react-scripts": "^5.0.1",
-    "react-test-renderer": "^16.0.0",
-    "redux-mock-store": "^1.3.0",
-    "serialize-javascript": ">=3.1.0",
-    "set-value": ">=4.0.1",
-    "sockjs": ">=0.3.20",
-    "ssri": ">=8.0.1"
+    "@vitejs/plugin-react": "^4.7.0",
+    "vite": "^4.5.14"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "overrides": {
+    "js-cookie": "^3.0.6"
   }
 }
