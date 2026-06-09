@@ -188,7 +188,11 @@ sigV4Client.newClient = function(config) {
     config.defaultContentType || "application/json";
 
   const invokeUrl = config.endpoint;
-  const endpoint = /(^https?:\/\/[^/]+)/g.exec(invokeUrl)[1];
+  const match = /(^https?:\/\/[^/]+)/g.exec(invokeUrl);
+  if (!match) {
+    throw new Error(`Invalid endpoint URL: ${invokeUrl}`);
+  }
+  const endpoint = match[1];
   const pathComponent = invokeUrl.substring(endpoint.length);
 
   awsSigV4Client.endpoint = endpoint;

@@ -275,3 +275,8 @@ export const register = (username, password, email) => (
     });
   })
 );
+
+export const getCurrentCredentials = () => {
+  const { accessKeyId, secretAccessKey, sessionToken } = AWS.config.credentials;
+  return { accessKeyId, secretAccessKey, sessionToken };
+};
