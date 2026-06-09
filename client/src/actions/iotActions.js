@@ -48,7 +48,7 @@ export const acquirePublicPolicies = (connectCallback, closeCallback) => (
     }
     const identityId = Cognito.getIdentityId();
     dispatch({ type: IDENTITY_UPDATED, identityId });
-    const awsCredentials = JSON.parse(sessionStorage.getItem('awsCredentials'));
+    const awsCredentials = Cognito.getCurrentCredentials();
 
     IoT.initNewClient(awsCredentials);
     IoT.attachConnectHandler(connectCallback);

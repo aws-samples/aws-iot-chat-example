@@ -81,10 +81,8 @@ export const handleSignOut = () => (
  * @param {string} token - Token from identity provider
  */
 const loginUserSuccess = (dispatch, user, awsCredentials, provider, token) => {
-  sessionStorage.setItem('awsCredentials', JSON.stringify(awsCredentials));
   sessionStorage.setItem('isLoggedIn', 'true');
   sessionStorage.setItem('provider', provider);
-  sessionStorage.setItem('providerToken', token);
   dispatch({ type: LOGIN_USER_SUCCESS, user });
   dispatch({ type: LOGGED_IN_STATUS_CHANGED, loggedIn: true });
   const identityId = Cognito.getIdentityId();
