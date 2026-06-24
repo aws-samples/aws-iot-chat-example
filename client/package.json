@@ -10,6 +10,8 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.0",
     "amazon-cognito-identity-js": "^6.3.0",
+    "aws-sdk": "^2.1692.0",
+    "aws-iot-device-sdk": "^2.2.13",
     "crypto-js": "^4.2.0",
     "loglevel": "^1.9.0",
     "moment": "^2.30.0",
@@ -27,7 +29,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",
-    "vite": "^4.5.14"
+    "vite": "^5.4.19"
   },
   "overrides": {
     "js-cookie": "^3.0.6"
