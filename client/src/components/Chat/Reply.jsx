@@ -15,7 +15,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from '../../lib/withRouter';
 
 import { messageToSendChanged } from '../../actions/chatActions';
 import { topicFromParams } from '../../lib/topicHelper';

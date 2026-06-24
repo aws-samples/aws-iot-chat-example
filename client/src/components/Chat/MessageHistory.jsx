@@ -15,7 +15,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Header, Comment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from '../../lib/withRouter';
 
 import Message from './Message';
 import LoadingUserComment from './LoadingUserComment';

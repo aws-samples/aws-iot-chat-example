@@ -1,4 +1,5 @@
 /*
+import { withRouter } from '../../lib/withRouter';
   Copyright 2017-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except
@@ -15,7 +16,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Container, Divider, Form, Message, Header, Segment } from 'semantic-ui-react';
-import { Redirect, Link } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 
 import {
   authFormUpdate,
@@ -70,7 +71,7 @@ export class Login extends Component {
     if (loggedIn) {
       const { from } = this.props.location.state || { from: { pathname: '/app' } };
       return (
-        <Redirect to={from} />
+        <Navigate to={from} replace />
       );
     }
 
@@ -146,4 +147,4 @@ export default connect(
     loginUser,
     loggedInStatusChanged,
   },
-)(Login);
+)(withRouter(Login));
