@@ -1,5 +1,4 @@
 /*
-import { withRouter } from '../../lib/withRouter';
   Copyright 2017-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except
@@ -17,6 +16,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Container, Divider, Form, Message, Header, Segment } from 'semantic-ui-react';
 import { Navigate, Link } from 'react-router-dom';
+import { withRouter } from '../../lib/withRouter';
 
 import {
   authFormUpdate,
@@ -112,7 +112,6 @@ export class Login extends Component {
             <Button color="teal" fluid type="submit" onClick={this.handleSubmit}>Login</Button>
             <Divider horizontal>Or</Divider>
             <Link to="/register"><Button secondary fluid>Sign Up Now</Button></Link>
-            <SocialLogins showFacebook showGoogle />
           </Segment>
         </Form>
       </Container>

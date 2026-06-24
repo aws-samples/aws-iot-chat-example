@@ -1,7 +1,10 @@
 #!/bin/bash
 
 STACK_NAME="iot-chat-api-prod"
-AWS_PROFILE_NAME=$1
+AWS_PROFILE_ARG=""
+if [ -n "$1" ]; then
+  AWS_PROFILE_ARG="--profile $1"
+fi
 
 function fail(){
   tput setaf 1; echo "Failure: $*" && tput sgr0
@@ -46,7 +49,7 @@ function check_jq() {
 function check_stack() {
   info "checking if $STACK_NAME exists..."
 
-  summaries=$(aws cloudformation list-stacks --profile $AWS_PROFILE_NAME | jq --arg STACK_NAME "$STACK_NAME" '.StackSummaries |
+  summaries=$(aws cloudformation list-stacks $AWS_PROFILE_ARG | jq --arg STACK_NAME "$STACK_NAME" '.StackSummaries |
     .[] | select((.StackName ==
   $STACK_NAME) and ((.StackStatus == "CREATE_COMPLETE") or (.StackStatus == "UPDATE_COMPLETE")))')
   if [ -z "$summaries" ]
@@ -61,7 +64,7 @@ function generate_config() {
   info "generating config file..."
 
   # Get all CloudFormation Outputs
-  outputs=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --profile $AWS_PROFILE_NAME | jq '.Stacks | .[] |
+  outputs=$(aws cloudformation describe-stacks --stack-name $STACK_NAME $AWS_PROFILE_ARG | jq '.Stacks | .[] |
     .Outputs | .[]')
 
   # ServiceEndpoint (API Gateway)
@@ -89,14 +92,14 @@ function generate_config() {
   success "Found Identity Pool Id"
 
   # IoT Endpoint
-  iot_endpoint=$(aws iot describe-endpoint --endpoint-type iot:Data-ATS --profile $AWS_PROFILE_NAME | jq '.endpointAddress')
+  iot_endpoint=$(aws iot describe-endpoint --endpoint-type iot:Data-ATS $AWS_PROFILE_ARG | jq '.endpointAddress')
   iot_endpoint=${iot_endpoint//\"}
   jq --arg IOT_ENDPOINT $iot_endpoint '. + { AwsIotHost: $IOT_ENDPOINT }' config.json > temp.json \
     && mv temp.json config.json
   success "Found IoT Endpint"
 
   # Region
-  region=$(aws configure get region --profile $AWS_PROFILE_NAME)
+  region=$(aws configure get region $AWS_PROFILE_ARG)
   jq --arg AWS_REGION $region '. + { AwsRegion: $AWS_REGION }' config.json > temp.json \
     && mv temp.json config.json
   success "Found Region"
