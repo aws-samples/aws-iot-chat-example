@@ -25,7 +25,7 @@
     "redux": "^5.0.0",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.0",
-    "uuid": "^11.1.0"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",
