@@ -15,7 +15,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Menu, Label } from 'semantic-ui-react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { withRouter } from '../../lib/withRouter';
 
 import { formatRoomCardHeader } from '../../lib/topicHelper';
 

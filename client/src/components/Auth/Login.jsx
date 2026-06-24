@@ -15,7 +15,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Container, Divider, Form, Message, Header, Segment } from 'semantic-ui-react';
-import { Redirect, Link } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
+import { withRouter } from '../../lib/withRouter';
 
 import {
   authFormUpdate,
@@ -70,7 +71,7 @@ export class Login extends Component {
     if (loggedIn) {
       const { from } = this.props.location.state || { from: { pathname: '/app' } };
       return (
-        <Redirect to={from} />
+        <Navigate to={from} replace />
       );
     }
 
@@ -111,7 +112,6 @@ export class Login extends Component {
             <Button color="teal" fluid type="submit" onClick={this.handleSubmit}>Login</Button>
             <Divider horizontal>Or</Divider>
             <Link to="/register"><Button secondary fluid>Sign Up Now</Button></Link>
-            <SocialLogins showFacebook showGoogle />
           </Segment>
         </Form>
       </Container>
@@ -146,4 +146,4 @@ export default connect(
     loginUser,
     loggedInStatusChanged,
   },
-)(Login);
+)(withRouter(Login));

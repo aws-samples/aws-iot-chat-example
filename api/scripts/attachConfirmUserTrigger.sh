@@ -4,7 +4,10 @@
 # https://github.com/serverless/serverless/pull/3799
 
 STACK_NAME="iot-chat-api-prod"
-AWS_PROFILE_NAME=$1
+AWS_PROFILE_ARG=""
+if [ -n "$1" ]; then
+  AWS_PROFILE_ARG="--profile $1"
+fi
 
 function fail() {
   tput setaf 1; echo "Failure: $*" && tput sgr0
@@ -44,7 +47,7 @@ function check_jq() {
 function check_stack() {
   info "checking if $STACK_NAME exists..."
 
-  summaries=$(aws cloudformation list-stacks --profile $AWS_PROFILE_NAME | jq --arg STACK_NAME "$STACK_NAME" ".StackSummaries |
+  summaries=$(aws cloudformation list-stacks $AWS_PROFILE_ARG | jq --arg STACK_NAME "$STACK_NAME" ".StackSummaries |
     .[] | select((.StackName ==
   \"$STACK_NAME\") and ((.StackStatus == \"CREATE_COMPLETE\") or (.StackStatus == \"UPDATE_COMPLETE\")))")
   if [ -z "$summaries" ]
@@ -59,12 +62,12 @@ function attach_trigger() {
   info "Attaching autoConfirmUser Lambda as PreSignUp trigger"
 
   # Get all CloudFormation Outputs
-  outputs=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --profile $AWS_PROFILE_NAME | jq '.Stacks | .[] |
+  outputs=$(aws cloudformation describe-stacks --stack-name $STACK_NAME $AWS_PROFILE_ARG | jq '.Stacks | .[] |
     .Outputs | .[]')
   user_pool_id=$(echo $outputs | jq --raw-output 'select(.OutputKey == "UserPoolId") | .OutputValue')
   lambda_arn=$(echo $outputs | jq --raw-output 'select(.OutputKey == "AutoConfirmUserFnArn") | .OutputValue')
 
-  aws cognito-idp update-user-pool --user-pool-id ${user_pool_id} --lambda-config PreSignUp=${lambda_arn} --profile $AWS_PROFILE_NAME
+  aws cognito-idp update-user-pool --user-pool-id ${user_pool_id} --lambda-config PreSignUp=${lambda_arn} $AWS_PROFILE_ARG
   success "Attached PreSignUp trigger"
 }
 

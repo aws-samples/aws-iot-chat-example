@@ -3,7 +3,10 @@
 # To tear down the stack, we must detach principals from policies. This script will be run as a before:remove hook to prevent the following error
 # An error occurred: PublicSubscribePolicy - The policy cannot be deleted as the policy is attached to one or more principals (name=PublicSubscribePolicy).
 
-AWS_PROFILE_NAME=$1
+AWS_PROFILE_ARG=""
+if [ -n "$1" ]; then
+  AWS_PROFILE_ARG="--profile $1"
+fi
 
 function fail() {
   tput setaf 1; echo "Failure: $*" && tput sgr0
@@ -51,7 +54,7 @@ function detach_policies() {
       continue
     fi
     info "Fetching list of targets for $policy"
-    targets=$(aws iot list-targets-for-policy --policy-name $policy --profile $AWS_PROFILE_NAME | jq --raw-output '.targets | .[]')
+    targets=$(aws iot list-targets-for-policy --policy-name $policy $AWS_PROFILE_ARG | jq --raw-output '.targets | .[]')
     success "Got list of targets for $policy"
 
     for full_target in $targets; do
@@ -59,12 +62,12 @@ function detach_policies() {
 
       info "Detaching $policy from $target"
 
-      aws iot detach-policy --policy-name $policy --target $target --profile $AWS_PROFILE_NAME
+      aws iot detach-policy --policy-name $policy --target $target $AWS_PROFILE_ARG
       success "Detached $policy from $target"
     done
 
     info "Deleting $policy"
-    aws iot delete-policy --policy-name $policy --profile $AWS_PROFILE_NAME
+    aws iot delete-policy --policy-name $policy $AWS_PROFILE_ARG
     success "Deleted $policy"
   done
 }

@@ -55,22 +55,22 @@ export const acquirePublicPolicies = (connectCallback, closeCallback) => (
     IoT.attachCloseHandler(closeCallback);
 
     if (!connectPolicy) {
-      ApiGateway.attachConnectPolicy().then(() =>
+      ApiGateway.attachConnectPolicy().finally(() =>
         dispatch({ type: CONNECT_POLICY_ATTACHED }));
     }
 
     if (!publicPublishPolicy) {
-      ApiGateway.attachPublicPublishPolicy().then(() =>
+      ApiGateway.attachPublicPublishPolicy().finally(() =>
         dispatch({ type: PUBLIC_PUBLISH_POLICY_ATTACHED }));
     }
 
     if (!publicSubscribePolicy) {
-      ApiGateway.attachPublicSubscribePolicy().then(() =>
+      ApiGateway.attachPublicSubscribePolicy().finally(() =>
         dispatch({ type: PUBLIC_SUBSCRIBE_POLICY_ATTACHED }));
     }
 
     if (!publicReceivePolicy) {
-      ApiGateway.attachPublicReceivePolicy().then(() =>
+      ApiGateway.attachPublicReceivePolicy().finally(() =>
         dispatch({ type: PUBLIC_RECEIVE_POLICY_ATTACHED }));
     }
 

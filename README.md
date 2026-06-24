@@ -59,7 +59,7 @@ Please note that this project has only been tested on macOS. Windows users may n
   * Ensure that the aws cli region is the same as what you define in `api/config.yml`
   * Please configure your `output` format to be `json`. [Instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-usage-output.html)
 * [jq](https://stedolan.github.io/jq/) to process command-line JSON.
-* [npm](https://www.npmjs.com/get-npm) the node package manager (Node.js 18+ recommended)
+* [npm](https://www.npmjs.com/get-npm) the node package manager (Node.js 20+ required)
 
 1. Clone the repository
 
@@ -73,13 +73,18 @@ If you would like to enable login with Facebook and/or Google, please follow the
 
 ```
 $ cd api
-$ sudo npm install -g serverless
 $ npm install
-$ serverless deploy
+$ npx serverless@3 deploy --region us-east-1
+```
+
+If using a named AWS profile instead of environment variables:
+
+```
+$ npx serverless@3 deploy --region us-east-1 --profile your-profile-name
 ```
 
 
-The [Serverless Framework](https://serverless.com/framework/) is a tool for deploying serverless architectures. The stack including Lambda functions and CloudFormation resources are defined in `api/serverless.yml`.
+The [Serverless Framework](https://serverless.com/framework/) is a tool for deploying serverless architectures. The stack including Lambda functions and CloudFormation resources are defined in `api/serverless.yml`. The API uses esbuild to bundle the Lambda functions (no Babel/Webpack required).
 
 After deploying the serverless application, two scripts are invoked by means of a lifecycle hook. The first, `api/scripts/attachConfirmUserTrigger.sh` is used to attach a Lambda function to the PreSignUp trigger on the Cognito User Pool.
 
@@ -100,7 +105,7 @@ It is important to run the setup script so that the client knows the destination
 
 ### Teardown
 
-To tear down the stack, use the command `serverless remove`.
+To tear down the stack, use the command `npx serverless@3 remove --region us-east-1`.
 
 ## Application Walkthrough
 

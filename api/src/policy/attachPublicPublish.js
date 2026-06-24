@@ -50,12 +50,12 @@ export const main = async (event, context, callback) => {
 try {
   await iot.createPolicy(JSON.stringify(policyDocument), policyName);
 } catch (e) {
-  if (e.statusCode === 409) {
-    // Policy already exists
+  if (e.name === 'ResourceAlreadyExistsException' || e.$metadata?.httpStatusCode === 409) {
     console.log("Policy already exists. Skipping policy creation.");
   } else {
     console.log(e);
     callback(null, failure({ status: false, error: e }));
+    return;
   }
 }
 
