@@ -11,11 +11,10 @@
   specific language governing permissions and limitations under the License.
 */
 
-import AWS from 'aws-sdk';
 import * as log from 'loglevel';
 
 import Config from '../config';
-import { authUser } from './aws-cognito';
+import { authUser, getCurrentCredentials } from './aws-cognito';
 import sigV4Client from './sigV4Client';
 
 export const invokeAPIGateway = async ({
@@ -29,10 +28,12 @@ export const invokeAPIGateway = async ({
     throw new Error('User is not logged in');
   }
 
+  const credentials = getCurrentCredentials();
+
   const client = sigV4Client.newClient({
-    accessKey: AWS.config.credentials.accessKeyId,
-    secretKey: AWS.config.credentials.secretAccessKey,
-    sessionToken: AWS.config.credentials.sessionToken,
+    accessKey: credentials.accessKeyId,
+    secretKey: credentials.secretAccessKey,
+    sessionToken: credentials.sessionToken,
     region: Config.awsRegion,
     endpoint: Config.awsApiGatewayInvokeUrl,
   });
