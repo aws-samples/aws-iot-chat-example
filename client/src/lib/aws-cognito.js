@@ -12,7 +12,8 @@
 */
 
 import { CognitoUserPool, CognitoUser, CognitoUserAttribute, AuthenticationDetails } from 'amazon-cognito-identity-js';
-import AWS from 'aws-sdk';
+import { CognitoIdentityClient, GetIdCommand, GetCredentialsForIdentityCommand } from '@aws-sdk/client-cognito-identity';
+import { fromCognitoIdentityPool } from '@aws-sdk/credential-provider-cognito-identity';
 import * as log from 'loglevel';
 
 import Config from '../config';
@@ -21,6 +22,12 @@ const userPool = new CognitoUserPool({
   UserPoolId: Config.awsCognitoUserPoolId,
   ClientId: Config.awsCognitoUserPoolAppClientId,
 });
+
+const identityClient = new CognitoIdentityClient({ region: Config.awsRegion });
+
+// Module-level credential cache
+let cachedCredentials = null;
+let cachedIdentityId = null;
 
 const getCurrentUser = () => userPool.getCurrentUser();
 
@@ -50,46 +57,52 @@ const getUserToken = currentUser => (
  * @returns {Promise<object>} - Object containing properties: accessKeyId, secretAccessKey,
  * sessionToken
  */
-export const getAwsCredentials = (token, provider) => (
-  new Promise((resolve, reject) => {
-    let providerKey = '';
+export const getAwsCredentials = async (token, provider) => {
+  let providerKey = '';
 
-    switch (provider) {
-      case 'user_pool':
-        providerKey = `cognito-idp.${Config.awsRegion}.amazonaws.com/${Config.awsCognitoUserPoolId}`;
-        break;
-      case 'facebook':
-        providerKey = 'graph.facebook.com';
-        break;
-      case 'google':
-        providerKey = 'accounts.google.com';
-        break;
-      case 'amazon':
-        providerKey = 'www.amazon.com';
-        break;
-      default:
-        break;
-    }
+  switch (provider) {
+    case 'user_pool':
+      providerKey = `cognito-idp.${Config.awsRegion}.amazonaws.com/${Config.awsCognitoUserPoolId}`;
+      break;
+    case 'facebook':
+      providerKey = 'graph.facebook.com';
+      break;
+    case 'google':
+      providerKey = 'accounts.google.com';
+      break;
+    case 'amazon':
+      providerKey = 'www.amazon.com';
+      break;
+    default:
+      break;
+  }
 
-    AWS.config.region = Config.awsRegion;
-    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-      IdentityPoolId: Config.awsCognitoIdentityPoolId,
-      Logins: {
-        [providerKey]: token,
-      },
-    });
+  const logins = { [providerKey]: token };
 
-    AWS.config.credentials.get((error) => {
-      if (error) {
-        reject(error);
-      }
+  // Get Identity ID
+  const getIdResponse = await identityClient.send(new GetIdCommand({
+    IdentityPoolId: Config.awsCognitoIdentityPoolId,
+    Logins: logins,
+  }));
 
-      const { accessKeyId, secretAccessKey, sessionToken } = AWS.config.credentials;
-      const credentialSubset = { accessKeyId, secretAccessKey, sessionToken };
-      resolve(credentialSubset);
-    });
-  })
-);
+  cachedIdentityId = getIdResponse.IdentityId;
+
+  // Get credentials for the identity
+  const credentialsResponse = await identityClient.send(new GetCredentialsForIdentityCommand({
+    IdentityId: cachedIdentityId,
+    Logins: logins,
+  }));
+
+  const { AccessKeyId, SecretKey, SessionToken, Expiration } = credentialsResponse.Credentials;
+  cachedCredentials = {
+    accessKeyId: AccessKeyId,
+    secretAccessKey: SecretKey,
+    sessionToken: SessionToken,
+    expireTime: Expiration,
+  };
+
+  return { accessKeyId: AccessKeyId, secretAccessKey: SecretKey, sessionToken: SessionToken };
+};
 
 /**
  * Fetches user details from Cognito User Pool
@@ -163,7 +176,7 @@ const authenticateUser = (username, password) => (
  * @returns {bool} - Whether the cached credentials are valid or not
  */
 export const authUser = async () => {
-  if (AWS.config.credentials && Date.now() < AWS.config.credentials.expireTime - 60000) {
+  if (cachedCredentials && cachedCredentials.expireTime && Date.now() < new Date(cachedCredentials.expireTime).getTime() - 60000) {
     return true;
   }
 
@@ -194,16 +207,16 @@ export const authUser = async () => {
  * @return {string} - Cognito Identity Id
  */
 export const getIdentityId = () => {
-  const identityId = AWS.config.credentials.identityId;
-  log.debug('principal', identityId);
-  return identityId;
+  log.debug('principal', cachedIdentityId);
+  return cachedIdentityId;
 };
 
 /**
  * Clears the cached Cognito ID associated with the currently configured identity pool ID
  */
 export const clearCachedId = () => {
-  AWS.config.credentials.clearCachedId();
+  cachedCredentials = null;
+  cachedIdentityId = null;
 };
 
 /**
@@ -277,6 +290,9 @@ export const register = (username, password, email) => (
 );
 
 export const getCurrentCredentials = () => {
-  const { accessKeyId, secretAccessKey, sessionToken } = AWS.config.credentials;
+  if (!cachedCredentials) {
+    return { accessKeyId: null, secretAccessKey: null, sessionToken: null };
+  }
+  const { accessKeyId, secretAccessKey, sessionToken } = cachedCredentials;
   return { accessKeyId, secretAccessKey, sessionToken };
 };
