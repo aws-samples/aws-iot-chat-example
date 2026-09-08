@@ -24,7 +24,7 @@
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.0",
     "react-router": "^6.20.0",
-    "react-router-dom": "^6.20.0",
+    "react-router-dom": "^6.30.6",
     "react-social-login": "^3.4.17",
     "redux": "^5.0.0",
     "redux-thunk": "^3.1.0",
